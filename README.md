@@ -5,12 +5,14 @@ See:
 
 [JSFtp Homepage](https://github.com/sergi/jsftp "JSFtp Homepage")
 
-[List of Non-standard Cryptographic Hash...](https://tools.ietf.org/id/draft-bryan-ftp-hash-03.html#rfc.appendix.Appendix+B)
+[List of Non-standard Cryptographic Hash...](https://tools.ietf.org/id/draft-bryan-ftp-hash-03.html#rfc.appendix.Appendix%20B)
 
 Be sure to check that the Ftp server supports the desired
 checksum algorithm before trying to use it.
 
-The checksums supported here are non-standard so YMMV.
+The checksums supported here are non-standard so YMMV. Feel free to report an issue
+if one of the included checksum algorithms doesn't work as expected with your ftp
+server. If you do, please include the full server response.
 
 All checksums are converted to upper case. So far, encountered
 checksums from the server are hex-encoded strings.
