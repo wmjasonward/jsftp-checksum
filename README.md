@@ -41,6 +41,9 @@ response coming from the server (usually a 4xx or 5xx error code), or an error
 indicating the MD5 response couldn't be parsed, and `checksum`
 is a string containing the checksum.
 
+Known server support seems to be based on:
+[FTP MD5 Draft Spec - Expired](https://tools.ietf.org/html/draft-twine-ftpmd5-00 "Expired FTP MD5 Draft Spec") 
+
 ```javascript
 
 Ftp.md5('myfile.txt', (err, checksum) => {
