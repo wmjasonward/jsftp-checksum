@@ -8,7 +8,6 @@
  */
 
 "use strict";
-var once = require("once");
 
 module.exports = function(jsftp) {
 
