@@ -49,7 +49,7 @@ module.exports = function(jsftp) {
   const regexParser = (regex, group) => {
     return response => {
       const lines = response.text.split("\n");
-      if (lines.length) {
+      if (lines.length > 0) {
         const groups = (lines.slice(-1)[0]).match(regex);
         if (groups) {
           return groups[group]; // eslint-disable-line security/detect-object-injection

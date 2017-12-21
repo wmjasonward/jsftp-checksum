@@ -53,29 +53,6 @@ describe("JsFTP Checksum Extension", function() {
     done();
   });
 
-
-  // describe("checksum worker func", function() {
-  //   it("correctly errors on unsupported checksum algorithm", function(done) {
-  //
-  //     ftp.checksum("/", "UNSUPPORTED", function(err, checksum) {
-  //       assert.deepEqual(err, {
-  //         Error: "UNSUPPORTED not supported",
-  //         isError: true
-  //       });
-  //       done();
-  //     });
-  //   });
-  //
-  //   it("reports unsupported checksum from server", function(done) {
-  //     // the ftpd server does not support any checksums so send it through
-  //     ftp.checksum("/", "XMD5", function(err, checksum) {
-  //       assert.ok(err && err.code >= 500, "expected error with >= 500 code");
-  //       done();
-  //     });
-  //   });
-  //
-  // });
-
   describe("md5 checksum command", function() {
     it("parses md5 command response (proftpd w/mod-digest)", function(done) {
       // we don't actually call ftp.raw because the local ftp server doesn't support any of our checksum commands
@@ -87,15 +64,37 @@ describe("JsFTP Checksum Extension", function() {
         isError: false,
       });
 
-
       ftp.md5("myfile.txt", function(err, checksum) {
         assert.ok(!err, "md5 generated error");
         assert.ok(checksum && checksum === "7F1EE68D2344001A050752B669242182", "checksum not expected value");
         ftp.raw.restore();
         done();
       });
-
     });
+
+    it("reports error if server md5 response cannot be parsed", function(done) {
+      // just send something through that breaks the regex
+      sinon.stub(ftp, "raw").callsArgWith(1, null, {
+        code: 251,
+        text: "251-Parse this\n251 If you dare",
+        isError: false,
+      });
+
+      ftp.md5("myfile.txt", function(err, checksum) {
+        assert.ok(err && err.text === "Unable to parse MD5 response", "should not have returned checksum here");
+        ftp.raw.restore();
+        done();
+      });
+    });
+
+    it("reports error if md5 feature not available", function(done) {
+      // the ftpd test server does not support any checksums so send it through
+      ftp.md5("myfile.txt", function(err, checksum) {
+        assert.ok(err && err.code >= 500, "expected error with >= 500 code");
+        done();
+      });
+    });
+
   });
 
   describe("xmd5 checksum command", function() {
@@ -127,7 +126,29 @@ describe("JsFTP Checksum Extension", function() {
         ftp.raw.restore();
         done();
       });
+    });
 
+    it("reports error if server xmd5 response cannot be parsed", function(done) {
+      // just send something through that breaks the regex
+      sinon.stub(ftp, "raw").callsArgWith(1, null, {
+        code: 251,
+        text: "251-Parse this\n251 If you dare",
+        isError: false,
+      });
+
+      ftp.xmd5("myfile.txt", function(err, checksum) {
+        assert.ok(err && err.text === "Unable to parse XMD5 response", "should not have returned checksum here");
+        ftp.raw.restore();
+        done();
+      });
+    });
+
+    it("reports error if xmd5 feature not available", function(done) {
+      // the ftpd test server does not support any checksums so send it through
+      ftp.xmd5("myfile.txt", function(err, checksum) {
+        assert.ok(err && err.code >= 500, "expected error with >= 500 code");
+        done();
+      });
     });
 
   });
@@ -161,8 +182,31 @@ describe("JsFTP Checksum Extension", function() {
         ftp.raw.restore();
         done();
       });
-
     });
+
+    it("reports error if server xcrc response cannot be parsed", function(done) {
+      // just send something through that breaks the regex
+      sinon.stub(ftp, "raw").callsArgWith(1, null, {
+        code: 251,
+        text: "251-Parse this\n251 If you dare",
+        isError: false,
+      });
+
+      ftp.xcrc("myfile.txt", function(err, checksum) {
+        assert.ok(err && err.text === "Unable to parse XCRC response", "should not have returned checksum here");
+        ftp.raw.restore();
+        done();
+      });
+    });
+
+    it("reports error if xcrc feature not available", function(done) {
+      // the ftpd test server does not support any checksums so send it through
+      ftp.xcrc("myfile.txt", function(err, checksum) {
+        assert.ok(err && err.code >= 500, "expected error with >= 500 code");
+        done();
+      });
+    });
+
   });
 
   describe("xsha1 checksum command", function() {
@@ -180,6 +224,30 @@ describe("JsFTP Checksum Extension", function() {
         done();
       });
     });
+
+    it("reports error if server xsha1 response cannot be parsed", function(done) {
+      // just send something through that breaks the regex
+      sinon.stub(ftp, "raw").callsArgWith(1, null, {
+        code: 251,
+        text: "251-Parse this\n251 If you dare",
+        isError: false,
+      });
+
+      ftp.xsha1("myfile.txt", function(err, checksum) {
+        assert.ok(err && err.text === "Unable to parse XSHA1 response", "should not have returned checksum here");
+        ftp.raw.restore();
+        done();
+      });
+    });
+
+    it("reports error if xsha1 feature not available", function(done) {
+      // the ftpd test server does not support any checksums so send it through
+      ftp.xsha1("myfile.txt", function(err, checksum) {
+        assert.ok(err && err.code >= 500, "expected error with >= 500 code");
+        done();
+      });
+    });
+
   });
 
   describe("xsha256 checksum command", function() {
@@ -197,6 +265,30 @@ describe("JsFTP Checksum Extension", function() {
         done();
       });
     });
+
+    it("reports error if server xsha256 response cannot be parsed", function(done) {
+      // just send something through that breaks the regex
+      sinon.stub(ftp, "raw").callsArgWith(1, null, {
+        code: 251,
+        text: "251-Parse this\n251 If you dare",
+        isError: false,
+      });
+
+      ftp.xsha256("myfile.txt", function(err, checksum) {
+        assert.ok(err && err.text === "Unable to parse XSHA256 response", "should not have returned checksum here");
+        ftp.raw.restore();
+        done();
+      });
+    });
+
+    it("reports error if xsha256 feature not available", function(done) {
+      // the ftpd test server does not support any checksums so send it through
+      ftp.xsha256("myfile.txt", function(err, checksum) {
+        assert.ok(err && err.code >= 500, "expected error with >= 500 code");
+        done();
+      });
+    });
+
   });
 
   describe("xsha512 checksum command", function() {
@@ -214,6 +306,30 @@ describe("JsFTP Checksum Extension", function() {
         done();
       });
     });
+
+    it("reports error if server xsha512 response cannot be parsed", function(done) {
+      // just send something through that breaks the regex
+      sinon.stub(ftp, "raw").callsArgWith(1, null, {
+        code: 251,
+        text: "251-Parse this\n251 If you dare",
+        isError: false,
+      });
+
+      ftp.xsha512("myfile.txt", function(err, checksum) {
+        assert.ok(err && err.text === "Unable to parse XSHA512 response", "should not have returned checksum here");
+        ftp.raw.restore();
+        done();
+      });
+    });
+
+    it("reports error if xsha512 feature not available", function(done) {
+      // the ftpd test server does not support any checksums so send it through
+      ftp.xsha512("myfile.txt", function(err, checksum) {
+        assert.ok(err && err.code >= 500, "expected error with >= 500 code");
+        done();
+      });
+    });
+
   });
 
 });
