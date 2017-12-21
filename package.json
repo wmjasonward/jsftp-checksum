@@ -4,7 +4,8 @@
   "description": "Adds some checksum support to JsFtp",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --reporter spec"
+    "test": "nyc mocha --reporter spec",
+    "lint": "eslint . --ext .js"
   },
   "repository": {
     "type": "git",
