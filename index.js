@@ -13,6 +13,7 @@ module.exports = function(jsftp) {
 
   /**
    * rawChecksumCommandHelper
+   * uses 'this' - be sure to set context to jsftp
    *
    * @param {string} cmd The checksum algorithm command (MD5, XMD5, etc)
    * @param {string} pathname The pathname to retrieve the checksum for
@@ -44,6 +45,10 @@ module.exports = function(jsftp) {
    * returns a function that tests the last line of the response
    * to the regex, returning the passed group number if match
    * null if no match
+   *
+   * @param {regex} regex The regular expression to match against the server command response
+   * @group {number} group The group index of the match results that contain the checksum
+   * @return {string} The checksum as extracted by regex, or null if no match
    */
   const regexParser = (regex, group) => {
     return response => {
@@ -63,7 +68,7 @@ module.exports = function(jsftp) {
 
   /**
    * Calls the server's MD5 command and parses the result
-   * It"s up to the client to ensure that the server provides this feature
+   * It's up to the client to ensure that the server provides this feature
    *
    * ftp.hasFeat("MD5")
    *
@@ -76,7 +81,7 @@ module.exports = function(jsftp) {
 
   /**
    * Calls the server's XMD5 command and parses the result
-   * It"s up to the client to ensure that the server provides this feature
+   * It's up to the client to ensure that the server provides this feature
    *
    * ftp.hasFeat("XMD5")
    *
@@ -92,7 +97,7 @@ module.exports = function(jsftp) {
 
   /**
    * Calls the server's XCRC command and parses the result
-   * It"s up to the client to ensure that the server provides this feature
+   * It's up to the client to ensure that the server provides this feature
    *
    * ftp.hasFeat("XCRC")
    *
@@ -108,7 +113,7 @@ module.exports = function(jsftp) {
 
   /**
    * Calls the server's XSHA1 command and parses the result
-   * It"s up to the client to ensure that the server provides this feature
+   * It's up to the client to ensure that the server provides this feature
    *
    * ftp.hasFeat("XSHA1")
    *
@@ -123,7 +128,7 @@ module.exports = function(jsftp) {
   const xsha256Parser = regexParser(/^2\d\d .*\b([a-f0-9]{64})\b.*$/i, 1);
   /**
    * Calls the server's XSHA256 command and parses the result
-   * It"s up to the client to ensure that the server provides this feature
+   * It's up to the client to ensure that the server provides this feature
    *
    * ftp.hasFeat("XSHA256")
    *
@@ -138,7 +143,7 @@ module.exports = function(jsftp) {
   const xsha512Parser = regexParser(/^2\d\d .*\b([a-f0-9]{128})\b.*$/i, 1);
   /**
    * Calls the server's XSHA512 command and parses the result
-   * It"s up to the client to ensure that the server provides this feature
+   * It's up to the client to ensure that the server provides this feature
    *
    * ftp.hasFeat("XSHA512")
    *

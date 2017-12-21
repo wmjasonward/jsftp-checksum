@@ -2,6 +2,7 @@ coverage.html
 *.un~
 lib-cov
 reports
+.idea
 .nyc_output
 test
 node_modules
