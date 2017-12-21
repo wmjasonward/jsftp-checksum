@@ -21,7 +21,7 @@ module.exports = function(jsftp) {
    */
   function rawChecksumCommandHelper(cmd, pathname, parser, callback) {
 
-    this.raw(`${cmd} ${pathname}`.trim(), function(err, response) {
+    this.raw(`${cmd} ${pathname}`, function(err, response) {
       if (err) {
         callback(err);
       } else {
@@ -30,11 +30,10 @@ module.exports = function(jsftp) {
           callback(null, checksum.toLocaleUpperCase());
         } else {
           callback({
-            code: response.code,
+            code: 500,
             text: `Unable to parse ${cmd} response`,
-            response: response.text,
+            response: response,
             isError: true,
-            isMark: response.isMark,
           }, null);
         }
       }
@@ -66,7 +65,7 @@ module.exports = function(jsftp) {
    * Calls the server's MD5 command and parses the result
    * It"s up to the client to ensure that the server provides this feature
    *
-   * ftp.hasFeat("MD5") === true
+   * ftp.hasFeat("MD5")
    *
    * @param {string} pathname
    * @param {function} callback if successful, called with md5 hash from server
@@ -79,7 +78,7 @@ module.exports = function(jsftp) {
    * Calls the server's XMD5 command and parses the result
    * It"s up to the client to ensure that the server provides this feature
    *
-   * ftp.hasFeat("XMD5") === true
+   * ftp.hasFeat("XMD5")
    *
    * @param {string} pathname
    * @param {function} callback if successful, called with md5 hash from server
@@ -95,7 +94,7 @@ module.exports = function(jsftp) {
    * Calls the server's XCRC command and parses the result
    * It"s up to the client to ensure that the server provides this feature
    *
-   * ftp.hasFeat("XCRC") === true
+   * ftp.hasFeat("XCRC")
    *
    * @param {string} pathname
    * @param {function} callback if successful, called with crc hash from server
@@ -111,7 +110,7 @@ module.exports = function(jsftp) {
    * Calls the server's XSHA1 command and parses the result
    * It"s up to the client to ensure that the server provides this feature
    *
-   * ftp.hasFeat("XSHA1") === true
+   * ftp.hasFeat("XSHA1")
    *
    * @param {string} pathname
    * @param {function} callback if successful, called with sha1 hash from server
@@ -126,7 +125,7 @@ module.exports = function(jsftp) {
    * Calls the server's XSHA256 command and parses the result
    * It"s up to the client to ensure that the server provides this feature
    *
-   * ftp.hasFeat("XSHA256") === true
+   * ftp.hasFeat("XSHA256")
    *
    * @param {string} pathname
    * @param {function} callback if successful, called with sha256 hash
@@ -141,7 +140,7 @@ module.exports = function(jsftp) {
    * Calls the server's XSHA512 command and parses the result
    * It"s up to the client to ensure that the server provides this feature
    *
-   * ftp.hasFeat("XSHA512") === true
+   * ftp.hasFeat("XSHA512")
    *
    * @param {string} pathname
    * @param {function} callback if successful, called with sha512 hash from server

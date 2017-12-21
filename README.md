@@ -1,7 +1,9 @@
 # jsftp-checksum
-Decorate JSFtp with some checksum support
+Adds some checksum support to JsFTP
 
-See:
+Currently supported checksum commands: MD5, XMD5, XCRC, XSHA1, XSHA256, XSHA512.
+
+References:
 
 [JSFtp Homepage](https://github.com/sergi/jsftp "JSFtp Homepage")
 
@@ -12,22 +14,46 @@ checksum algorithm before trying to use it.
 
 The checksums supported here are non-standard so YMMV. Feel free to report an issue
 if one of the included checksum algorithms doesn't work as expected with your ftp
-server. If you do, please include the full server response.
+server. Be sure to verify that the server supports that algorithm first.
+If you do open an issue, please include the full server response.
 
-All checksums are converted to upper case. So far, encountered
-checksums from the server are hex-encoded strings.
+All checksums are converted to upper case. So far, they're all hex-encoded strings.
 
-#### Starting it up
+#### Usage Example with Feature Detection
 
 ```javascript
-var JSFtp = require("jsftp");
-require('jsftp-checksum')(JSFtp);
+const jsftp = require("jsftp");
+require('jsftp-checksum')(jsftp);
 
-var Ftp = new JSFtp({
+var Ftp = new jsftp({
   host: "myserver.com",
   port: 3331, // defaults to 21
   user: "user", // defaults to "anonymous"
   pass: "1234" // defaults to "@anonymous"
+});
+
+Ftp.on("connect", () => {
+  // we need to explicitly call getFeatures in this example since xmd5
+  // would be the first command to be executed after connecting
+  Ftp.getFeatures(err => {
+    if (err) {
+      console.log(err);
+    } else {
+      if (Ftp.hasFeat("xmd5")) {  // command case doesn't matter here
+        Ftp.xmd5("myfile.txt", (err, checksum) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log(checksum);
+            // Prints something like
+            // 7F1EE68D2344001A050752B669242182
+          }
+        });
+      }
+    }
+  });
+
+  // Ftp.destroy() when you're finished
 });
 ```
 
@@ -161,25 +187,21 @@ Ftp.xsha512('myfile.txt', (err, checksum) => {
 });
 ```
 
+#### Ftp Server Support
 
-##### Other Notes
+| Server | MD5 | XMD5 | XCRC | XSHA1 | XSHA256 | XSHA512 |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| ProFtp+mod_digest | Y | Y | Y | Y | Y | Y |
+| JScape MFT | - | Y | Y | - | - | - | - |
 
 
+| Key |  |
+| :---: | :--- |
+| Y | jsftp-checksum successfully tested |
+| N | The tested ftp server advertises algorithm support, but jsftp-checksum cannot parse it correctly |
+| - | The tested ftp server (as configured) does not support the algorithm |
+
+#### Other Notes
 
 I tried to stick to the language support and eslint config of the
 jsftp project for consistency.
-
-##### To-Do
-
-Add tests :) My current tests (not included in the repo) rely
-on a couple of remote ftp servers I control that support MD5/XCRC/XMD5/XSHA1/XSHA256/XSHA512. I need to
-create mock support for included checksums to test against.
-
-Figure out why Ftp.hasFeat doesn't seem to work. Not sure if there's
-an upstream problem or I'm just using it wrong. Ideally, you could
-call Ftp.hasFeat('XMD5') to ensure the server supports the feature.
-As an alternative, create a `hasXMD5` method that does a `Ftp.raw('feat'...)`
-and looks for XMD5 in the response (for example).
-
-Create a table of ftp servers, supported hash algorithms,
- and successful tests with this module.
