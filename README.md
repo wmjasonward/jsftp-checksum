@@ -6,7 +6,7 @@ Some FTP servers provide commands that allow the client to directly retrieve a c
 a file. This can make operations like sync'ing much faster and more reliable since you don't
 need to download the file and compare it to your local copy, or rely solely on things like the file
 size and modified time to determine if the file has changed. The size reported by
-several ftp server commands can just be an approximations, and the modified time can change even
+several ftp server commands can just be approximations, and the modified time can change even
 if the contents of the file have not changed.
  
 This module adds methods to JSFtp to access some of those checksum commands and parse the
