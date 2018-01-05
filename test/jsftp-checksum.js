@@ -339,9 +339,13 @@ describe("Parse expected responses", function() {
 
 describe("tests against live server", function() {
   before(function() {
-    if (!process.env.host) {
+    if (!process.env.FTP_HOST) {
       this.skip();
     }
   });
+
+
+
+
 
 });
