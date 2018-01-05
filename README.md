@@ -187,9 +187,9 @@ Ftp.xsha512('myfile.txt', (err, checksum) => {
 });
 ```
 
-#### Ftp Server Support
+#### Known Ftp Server Support*
 
-| Server | MD5 | XMD5 | XCRC | XSHA1 | XSHA256 | XSHA512 |
+| Server** | MD5 | XMD5 | XCRC | XSHA1 | XSHA256 | XSHA512 |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | ProFtp+mod_digest | Y | Y | Y | Y | Y | Y |
 | JScape MFT | - | Y | Y | - | - | - | - |
@@ -200,6 +200,10 @@ Ftp.xsha512('myfile.txt', (err, checksum) => {
 | Y | jsftp-checksum successfully tested |
 | N | The tested ftp server advertises algorithm support, but jsftp-checksum cannot parse it correctly |
 | - | The tested ftp server (as configured) does not support the algorithm |
+
+\* Other Ftp servers may be supported, please report success/failure
+
+\*\* Ftp server support may vary due to version/configuration differences
 
 #### Other Notes
 
