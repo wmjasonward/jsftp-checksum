@@ -338,12 +338,29 @@ describe("Parse expected responses", function() {
 });
 
 describe("tests against live server", function() {
+  let ftp;
+
   before(function() {
     if (!process.env.FTP_HOST) {
       this.skip();
     }
   });
 
+  before(function(done) {
+    ftp = new jsftp(options);
+    ftp.once("connect", done);
+  });
+
+  after(done => {
+    if (ftp) {
+      ftp.destroy();
+      ftp = null;
+    }
+  });
+
+  // what we're testing depends on what the server advertises in feat
+  // if it doesn't advertise a command, we expect an error
+  // if it does, we expect a digest of the proper size
 
 
 
