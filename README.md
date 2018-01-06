@@ -137,6 +137,27 @@ Ftp.xcrc('myfile.txt', (err, checksum) => {
 });
 ```
 
+##### Ftp.xsha(pathname, callback)
+
+With the `xsha` method you can retrieve the SHA1 checksum for a file on the server
+that accepts the XSHA command. The method accepts a callback with the signature `err, checksum`, in which `err` is the error
+response coming from the server (usually a 4xx or 5xx error code), or an error
+indicating the XSHA response couldn't be parsed, and `checksum`
+is a string containing the checksum.
+
+```javascript
+
+Ftp.xsha('myfile.txt', (err, checksum) => {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log(checksum);
+    // Prints something like
+    // 85C7C35F151659B612C67ED74C4760A78D89F4C8
+  }
+});
+```
+
 ##### Ftp.xsha1(pathname, callback)
 
 With the `xsha1` method you can retrieve the SHA1 checksum for a file on the server
