@@ -231,6 +231,59 @@ describe("Parse known server responses and errors", function() {
 
   });
 
+  describe("xsha checksum command", function() {
+    it("parses xsha command response (proftpd w/mod-digest)", function(done) {
+      sandbox.stub(ftp, "raw").callsArgWith(1, null, {
+        code: 250,
+        text: "250-Computing SHA digest\n250 85C7C35F151659B612C67ED74C4760A78D89F4C8",
+        isError: false,
+      });
+
+      ftp.xsha("myfile.txt", function(err, checksum) {
+        assert.ok(!err, "xsha generated error");
+        assert.ok(checksum && checksum === "85C7C35F151659B612C67ED74C4760A78D89F4C8", "checksum not expected value");
+        done();
+      });
+    });
+
+    it("parses xsha command response (serv-u)", function(done) {
+      sandbox.stub(ftp, "raw").callsArgWith(1, null, {
+        code: 250,
+        text: "250 85C7C35F151659B612C67ED74C4760A78D89F4C8",
+        isError: false,
+      });
+
+      ftp.xsha("myfile.txt", function(err, checksum) {
+        assert.ok(!err, "xsha generated error");
+        assert.ok(checksum && checksum === "85C7C35F151659B612C67ED74C4760A78D89F4C8", "checksum not expected value");
+        done();
+      });
+    });
+
+    it("reports error if server xsha response cannot be parsed", function(done) {
+      // just send something through that breaks the regex
+      sandbox.stub(ftp, "raw").callsArgWith(1, null, {
+        code: 251,
+        text: "251-Parse this\n251 If you dare",
+        isError: false,
+      });
+
+      ftp.xsha("myfile.txt", function(err, checksum) {
+        assert.ok(err && err.text === "Unable to parse XSHA response", "should not have returned checksum here");
+        done();
+      });
+    });
+
+    it("reports error if xsha feature not available", function(done) {
+      // the ftpd test server does not support any checksums so send it through
+      ftp.xsha("myfile.txt", function(err, checksum) {
+        assert.ok(err && err.code >= 500, "expected error with >= 500 code");
+        done();
+      });
+    });
+
+  });
+
   describe("xsha1 checksum command", function() {
     it("parses xsha1 command response (proftpd w/mod-digest)", function(done) {
       sandbox.stub(ftp, "raw").callsArgWith(1, null, {

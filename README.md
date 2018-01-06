@@ -202,16 +202,16 @@ Ftp.xsha512('myfile.txt', (err, checksum) => {
 
 #### Known Ftp Server Support*
 
-| Server\*\* | MD5 | XMD5 | XCRC | XSHA1 | XSHA256 | XSHA512 |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| ProFtp+mod_digest | Y | Y | Y | Y | Y | Y |
-| JScape MFT | - | Y | Y | - | - | - | - |
-| Serv-U FTP | - | Y | Y | Y | Y | Y |
+| Server** | MD5 | XMD5 | XCRC | XSHA | XSHA1 | XSHA256 | XSHA512 |
+| :--- | :---: | :---: | :---: | :---: |  :---: | :---: | :---: |
+| ProFtp+mod_digest | Y | Y | Y | Y | Y | Y | Y |
+| JScape MFT | - | Y | Y | - | - | - | - | - |
+| Serv-U FTP | - | Y | Y | - | Y | Y | Y |
 
 
 | Key |  |
 | :---: | :--- |
-| Y | jsftp-checksum successfully tested |
+| Y | jsftp-checksum has been successfully tested against this server |
 | N | The tested ftp server advertises algorithm support, but jsftp-checksum cannot parse it correctly |
 | - | The tested ftp server (as configured) does not support the algorithm |
 
@@ -220,7 +220,7 @@ Ftp.xsha512('myfile.txt', (err, checksum) => {
 \*\* Ftp server support may vary due to version/configuration differences
 
 
-### Other Checksum Commands
+##### Other Checksum Commands
 
 There are other checksum commands in the wild (and in [this list](https://tools.ietf.org/id/draft-bryan-ftp-hash-03.html#rfc.appendix.Appendix%20B)).
  If you need support for a different one, please open an issue and I'll see if I can add it.

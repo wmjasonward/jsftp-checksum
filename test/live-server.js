@@ -57,7 +57,8 @@ describe(`testing against live server - ${process.env.FTP_HOST}`, function () {
 
   const hasFeat = (feat) => {
     const lfeat = feat.toLowerCase(); // jsftp uses toLowerCase on features
-    return features.some(f => f.startsWith(lfeat));
+    const re = new RegExp(`^${lfeat}\\b.*$`);
+    return features.some(f => f.match(re));
   };
 
   before(function () {
@@ -125,6 +126,20 @@ describe(`testing against live server - ${process.env.FTP_HOST}`, function () {
       } else {
         console.warn("server does not advertise xcrc feature support");
         assert.ok(err, `server doesn't advertise xcrc feature, but we did not get an error as expected`);
+        done();
+      }
+    });
+  });
+
+  it("xsha command", function (done) {
+    ftp.xsha(process.env.FTP_TEST_PATHNAME, (err, checksum) => {
+      if (hasFeat("xsha")) {
+        assert.ok(!err, "xsha command generated unexpected error");
+        assert.ok(ishexStr(checksum) && checksum.length === 40, "returned checksum doesn't appear to be xsha hash");
+        done();
+      } else {
+        console.warn("server does not advertise xsha feature support");
+        assert.ok(err, `server doesn't advertise xsha feature, but we did not get an error as expected`);
         done();
       }
     });
