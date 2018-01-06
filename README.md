@@ -193,6 +193,7 @@ Ftp.xsha512('myfile.txt', (err, checksum) => {
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | ProFtp+mod_digest | Y | Y | Y | Y | Y | Y |
 | JScape MFT | - | Y | Y | - | - | - | - |
+| Serv-U FTP | - | Y | Y | Y | Y | Y |
 
 
 | Key |  |
