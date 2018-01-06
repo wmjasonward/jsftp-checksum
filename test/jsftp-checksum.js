@@ -7,7 +7,7 @@
   *  FTP_USER
   *  FTP_PASS
   *  FTP_PORT
-  *  JSFTP_TEST_PATHNAME (the pathname to send through to the checksum commands)
+  *  FTP_TEST_PATHNAME (the pathname to send through to the checksum commands)
   *
   * @package jsftp-checksum
   * @copyright Copyright(c) 2017 Jason Ward
@@ -61,6 +61,8 @@ describe("Parse expected responses", function() {
 
     if (_server) {
       _server.close(done);
+    } else {
+      done();
     }
   });
 
@@ -337,8 +339,23 @@ describe("Parse expected responses", function() {
 
 });
 
+/**
+ * simple regex based validator to ensure the passed string
+ * looks like a valid hex-encoded value
+ * we don't actually decode it
+ */
+function ishexStr(str) {
+  return (typeof str === 'string') && str.match(/^[0-9a-f]+$/i);
+}
+
 describe("tests against live server", function() {
   let ftp;
+  let features = [];
+
+  // const hasFeat = (feat) => {
+  //   const lfeat = feat.toLowerCase(); // jsftp uses toLowerCase on features
+  //   return features.some(f => f.startsWith(lfeat));
+  // };
 
   before(function() {
     if (!process.env.FTP_HOST) {
@@ -351,18 +368,71 @@ describe("tests against live server", function() {
     ftp.once("connect", done);
   });
 
-  after(done => {
+  before(function(done) {
+    ftp.getFeatures((err, feats) => {
+      // todo: if err - bail
+      features = feats;
+      done();
+    });
+  });
+
+  after(() => {
     if (ftp) {
       ftp.destroy();
       ftp = null;
     }
   });
 
-  // what we're testing depends on what the server advertises in feat
+  // todo: modify these so that what we're testing depends on what the server advertises in feat
   // if it doesn't advertise a command, we expect an error
   // if it does, we expect a digest of the proper size
+  // server has the feature, we'll expect a valid result
+  it("md5 command", function(done) {
+    ftp.md5(process.env.FTP_TEST_PATHNAME, (err, checksum) => {
+      assert.ok(!err, "md5 command generated unexpected error");
+      assert.ok(ishexStr(checksum) && checksum.length === 32, "returned checksum doesn't appear to be md5 hash");
+      done();
+    });
+  });
 
+  it("xmd5 command", function(done) {
+    ftp.xmd5(process.env.FTP_TEST_PATHNAME, (err, checksum) => {
+      assert.ok(!err, "xmd5 command generated unexpected error");
+      assert.ok(ishexStr(checksum) && checksum.length === 32, "returned checksum doesn't appear to be md5 hash");
+      done();
+    });
+  });
 
+  it("xcrc command", function(done) {
+    ftp.xcrc(process.env.FTP_TEST_PATHNAME, (err, checksum) => {
+      assert.ok(!err, "xcrc command generated unexpected error");
+      assert.ok(ishexStr(checksum) && checksum.length === 8, "returned checksum doesn't appear to be crc hash");
+      done();
+    });
+  });
 
+  it("xsha1 command", function(done) {
+    ftp.xsha1(process.env.FTP_TEST_PATHNAME, (err, checksum) => {
+      assert.ok(!err, "xsha1 command generated unexpected error");
+      assert.ok(ishexStr(checksum) && checksum.length === 40, "returned checksum doesn't appear to be xsha1 hash");
+      done();
+    });
+  });
+
+  it("xsha256 command", function(done) {
+    ftp.xsha256(process.env.FTP_TEST_PATHNAME, (err, checksum) => {
+      assert.ok(!err, "xsha256 command generated unexpected error");
+      assert.ok(ishexStr(checksum) && checksum.length === 64, "returned checksum doesn't appear to be xsha256 hash");
+      done();
+    });
+  });
+
+  it("xsha512 command", function(done) {
+    ftp.xsha512(process.env.FTP_TEST_PATHNAME, (err, checksum) => {
+      assert.ok(!err, "xsha512 command generated unexpected error");
+      assert.ok(ishexStr(checksum) && checksum.length === 128, "returned checksum doesn't appear to be xsha512 hash");
+      done();
+    });
+  });
 
 });
