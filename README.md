@@ -2,15 +2,15 @@
 Adds support for some ftp server checksum commands to JSFtp
 
 
-Some FTP servers provide commands that allow the client to directly retrieve a checksum for
-a file. This can make operations like sync'ing much faster and more reliable since you don't
-need to download the file and compare it to your local copy, or rely solely on things like the file
-size and modified time to determine if the file has changed. The size reported by
-several ftp server commands can just be approximations, and the modified time can change even
-if the contents of the file have not changed.
+Some FTP servers provide commands that allow the client to retrieve a checksum for
+a file on the server. This can make operations like sync-ing much faster and more reliable
+since you don't need to rely on attributes like the file size and modified time to determine
+if the file has changed. Plus, the size reported by several ftp server commands can just be
+approximations, and the modified time can change even if the contents of the file have
+not changed so those methods can be error-prone.
  
 This module adds methods to JSFtp to access some of those checksum commands and parse the
-results. Currently supported checksum commands: MD5, XMD5, XCRC, XSHA1, XSHA256, XSHA512.
+results. Currently supported checksum commands: MD5, XMD5, XCRC, XSHA, XSHA1, XSHA256, XSHA512.
 
 
 ---
@@ -30,7 +30,7 @@ if one of the included checksum algorithms doesn't work as expected with your ft
 server. Be sure to verify that the server supports that algorithm first.
 If you do open an issue, please include the full server response.
 
-All checksums are converted to upper case before being returned as hex-encoded strings.
+All checksums are returned as hex-encoded strings with the `A-F` converted to upper case.
 
 #### Usage Example with Feature Detection
 
