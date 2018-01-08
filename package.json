@@ -22,7 +22,12 @@
     "xcrc",
     "xsha1",
     "xsha256",
-    "xsha512"
+    "xsha512",
+    "sha",
+    "sha1",
+    "sha256",
+    "sha512",
+    "crc"
   ],
   "author": "Jason Ward",
   "license": "MIT",
