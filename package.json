@@ -1,7 +1,7 @@
 {
   "name": "jsftp-checksum",
   "version": "1.1.6",
-  "description": "Adds some checksum comman support to JSFtp",
+  "description": "Adds support to JSFtp for some non-standard server checksum commands",
   "main": "index.js",
   "scripts": {
     "test": "nyc mocha --reporter spec test/jsftp-checksum.js",
